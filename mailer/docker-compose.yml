@@ -1,0 +1,23 @@
+services:
+  mailer:
+    container_name: mailer
+    build: ./
+    restart: on-failure
+    ports:
+      - 5010:5010
+    networks:
+      - kafka_kafka-network
+    environment:
+      SMTP_USERNAME: /run/secrets/smtp_username
+      SMTP_PASSWORD: /run/secrets/smtp_password
+      KAFKA_BOOTSTRAP_SERVER: kafka_broker_1:9092
+
+networks:
+  kafka_kafka-network:
+    external: true
+
+secrets:
+  smtp_username:
+    file: ./secrets/smtp_username.txt
+  smtp_password:
+    file: ./secrets/smtp_password.txt

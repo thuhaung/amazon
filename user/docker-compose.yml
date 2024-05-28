@@ -1,0 +1,50 @@
+services:
+  user-postgresql:
+    container_name: user-postgresql
+    build: ./postgres/
+    restart: always
+    ports:
+      - 5433:5432
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - user-network
+    environment:
+      POSTGRES_USER: postgres
+      PG_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: amazon
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  user-backend:
+    depends_on:
+      user-postgresql:
+        condition: service_healthy
+        restart: true
+    container_name: user-backend
+    build: ./backend/
+    restart: on-failure
+    ports:
+      - 5001:5001
+    networks:
+      - kafka_kafka-network
+      - user-network
+      - service-registry_discovery-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-postgresql:5432/amazon
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka_broker_1:9092
+      KAFKA_BOOTSTRAP_SERVERS: kafka_broker_1:9092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      URI_AUTH_SERVICE: http://auth-backend:5000
+
+networks:
+  kafka_kafka-network:
+    external: true
+  service-registry_discovery-network:
+    external: true
+  user-network:
+    driver: bridge

@@ -1,0 +1,13 @@
+services:
+  service-registry:
+    container_name: service-registry
+    restart: on-failure
+    build: ./
+    ports:
+      - 8761:8761
+    networks:
+      - discovery-network
+
+networks:
+  discovery-network:
+    driver: bridge
