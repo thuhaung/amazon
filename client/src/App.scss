@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "Amazon Ember";
+    src: url("./assets/fonts/Amazon Ember.ttf")
+}
+
+@font-face {
+    font-family: "Amazon Ember Medium";
+    src: url("./assets/fonts/Amazon Ember Medium.ttf")
+} 
+
+@font-face {
+    font-family: "Amazon Ember Thin";
+    src: url("./assets/fonts/Amazon Ember Thin.ttf")
+} 
+
+@font-face {
+    font-family: "Amazon Ember Light";
+    src: url("./assets/fonts/Amazon Ember Light.ttf")
+} 
+
+@font-face {
+    font-family: "Amazon Ember Mono";
+    src: url("./assets/fonts/Amazon Ember Mono.ttf")
+} 
+
+@font-face {
+    font-family: "Amazon Ember Heavy";
+    src: url("./assets/fonts/Amazon Ember Heavy.ttf")
+} 
+
+@font-face {
+    font-family: "Amazon Ember Bold";
+    src: url("./assets/fonts/Amazon Ember Bold.ttf")
+} 
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Amazon Ember";
+    a {
+        text-decoration: none;
+    }
+}

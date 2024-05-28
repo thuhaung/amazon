@@ -1,0 +1,214 @@
+@use "../../../components/variables";
+
+.security {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .form {
+        width: 100%;
+        border: 1px solid #D5D9D9;
+        border-radius: 7px;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        .form-section {
+            width: 100%;
+            padding: 0 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #D5D9D9;
+            &:last-child {
+                border: none;
+                padding-bottom: 10px;
+            }
+            .form-group {
+                width: 80%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                margin: 0;
+                .form-label {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-start;
+                    gap: 10px;
+                    align-items: center;
+                    .error, .success {
+                        display: none;
+                        &.active {
+                            display: block;
+                        }
+                    }
+                    .error {
+                        color: variables.$red;
+                    }
+                    .success {
+                        color: green;
+                    }
+                }
+                .form-value {
+                    font-size: 15px;
+                    display: none;
+                    &.active {
+                        display: block;
+                    }
+                }
+                .edit-password {
+                    width: 100%;
+                    display: none;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                    &.active {
+                        display: flex;
+                    }
+                    .edit-password-group {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 5px;
+                        .edit-password-label {
+                            font-size: 13px;
+                            font-weight: bold;
+                        }
+                        .edit-password-input {
+                            width: 100%;
+                            max-width: 300px;
+                            border: 1px solid #a9a9a9;
+                            border-radius: 7px;
+                            font-size: 15px;
+                            padding: 5px 10px;
+                            &:focus {
+                                outline: none;
+                                border: 2px solid variables.$orange;
+                            }
+                        }
+                        .edit-password-error {
+                            margin-top: -2px;
+                            font-size: 12px;
+                            font-weight: bold;
+                            color: variables.$red;
+                        }
+                    }
+                }
+                .form-input {
+                    width: 100%;
+                    max-width: 300px;
+                    border-radius: 7px;
+                    font-size: 15px;
+                    padding: 5px 10px;
+                    display: none;
+                    &:focus {
+                        outline: none;
+                        border: 2px solid variables.$orange;
+                    }
+                    &.active {
+                        display: block;
+                    }
+                }
+                .verify-by-email {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    align-items: flex-start;
+                    .message {
+                        font-size: 15px;
+                    }
+                    .verify-section {
+                        width: 100%;
+                        display: flex;
+                        justify-content: flex-start;
+                        gap: 10px;
+                        align-items: center;
+                        .verify-input {
+                            width: 100%;
+                            border: 1px solid #a9a9a9;
+                            max-width: 300px;
+                            border-radius: 7px;
+                            font-size: 15px;
+                            padding: 5px 10px;
+                            &:focus {
+                                outline: none;
+                                border: 2px solid variables.$orange;
+                            }
+                        }
+                        .countdown {
+                            color: variables.$alexa-blue;
+                            font-size: 14px;
+                        }
+                    }
+                    .not-receive {
+                        margin-top: -5px;
+                        font-size: 13px;
+                        .resend {
+                            display: inline-block;
+                            cursor: pointer;
+                            color: variables.$alexa-blue;
+                            text-decoration: underline;
+                            &:hover {
+                                color: variables.$dark-orange;
+                            }
+                        }
+                    }
+                    .verify {
+                        width: 18%;
+                        margin-top: 13px;
+                        border: 1px solid #D5D9D9;
+                        border-radius: 7px;
+                        font-size: 13px;
+                        color: #0F1111;
+                        cursor: pointer;
+                        padding: 5px 0;
+                        text-align: center;
+                        box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+                        &:hover {
+                            background: #F7FAFA;
+                        }
+                    }
+                }
+                .form-radio {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-start;
+                    gap: 20px;
+                    align-items: center;
+                    display: none;
+                    &.active {
+                        display: flex;
+                    }
+                    .radio-group {
+                        display: flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        gap: 5px;
+                        .label {
+                            font-size: 15px;
+                        }
+                    }
+                }
+            }
+            .edit {
+                width: 18%;
+                border: 1px solid #D5D9D9;
+                border-radius: 7px;
+                font-size: 13px;
+                color: #0F1111;
+                cursor: pointer;
+                padding: 5px 0;
+                text-align: center;
+                box-shadow: 0 2px 5px 0 rgba(213,217,217,.5);
+                &:hover {
+                    background: #F7FAFA;
+                }
+            }
+        }
+    }
+}

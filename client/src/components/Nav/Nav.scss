@@ -1,0 +1,727 @@
+@use "../variables";
+
+.nav {
+    width: 100%;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    top: 0;
+    z-index: 2;
+    .main-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+        background: variables.$dark-blue;
+        padding: 14px 10px 8px 20px;
+        font-size: 16px;
+        color: white;
+        .grey-background {
+            width: 100%;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            z-index: 2;
+            display: none;
+            &.active {
+                display: block;
+            }
+        }
+        .menu-mobile {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 80%;
+            height: 100vh;
+            overflow-y: scroll;
+            background: white;
+            z-index: 3;
+            display: none;
+            .welcome {
+                width: 100%;
+                display: flex;
+                align-items: flex-start;
+                background: #232f3e;
+                padding: 40px 30px 30px;
+                .welcome-text {
+                    font-family: "Amazon Ember Bold";
+                    font-size: 30px;
+                    color: white;
+                }
+                .close {
+                    position: absolute;
+                    top: 13px;
+                    right: 25px;
+                    font-size: 20px;
+                    transform: scaleX(1.2);
+                    cursor: pointer;
+                }
+            }
+            .categories {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                color: black;
+                .category {
+                    width: 100%;
+                    padding: 15px 30px 25px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 20px;
+                    background: white;
+                    border-bottom: 4px solid rgb(213, 219, 219);
+                    &:last-child {
+                        padding-bottom: 45px;
+                        cursor: pointer;
+                    }
+                    .category-info {
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        .name {
+                            font-size: 22px;
+                            color: rgb(41, 41, 41);
+                            font-family: "Amazon Ember Bold";
+                        }
+                        .see-all {
+                            font-size: 14px;
+                            padding: 5px;
+                            cursor: pointer;
+                            color: variables.$alexa-blue;
+                            border: 1px solid variables.$alexa-blue;
+                            border-radius: 4px;
+                            &:hover {
+                                background: variables.$alexa-blue;
+                                color: white;
+                            }
+                        }
+                    }
+                    .sub-items {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 15px;
+                        .item {
+                            font-size: 16px;
+                            color: black;
+                            cursor: pointer;
+                            &:hover {
+                                text-decoration: underline;
+                                color: variables.$alexa-blue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .left-hand-side {
+            width: 78%;
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+            flex-grow: 1;
+            align-items: center;
+            z-index: 2;
+            .intro {
+                width: 220px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .logo {
+                    width: 50%;
+                    max-width: 100px;
+                    margin-top: 5px;
+                    img {
+                        width: 100%;
+                    }
+                }
+                .location {
+                    width: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    .label {
+                        font-size: 14px;
+                        font-family: "Amazon Ember Light";
+                    }
+                    .specific-region {
+                        width: 100%;
+                        cursor: pointer;
+                        display: flex;
+                        justify-content: flex-end;
+                        align-items: center;
+                        img {
+                            width: 20px;
+                            height: 18px;
+                            margin-bottom: 3px;
+                        }
+                        .region {
+                            font-weight: bold;
+                            font-size: 14px;
+                        }
+                    }
+                    .location-dropdown {
+                        width: 100%;
+                        position: absolute;
+                        top: 62px;
+                        left: 100px;
+                        max-width: 300px;
+                        border-bottom-left-radius: 4px;
+                        border-bottom-right-radius: 4px;
+                        background: white;
+                        color: black;
+                        display: none;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 10px;
+                        padding: 15px;
+                        &.active {
+                            display: flex;
+                        }
+                        .add-address {
+                            width: 100%;
+                            font-size: 15px;
+                            text-align: center;
+                            a {
+                                display: block;
+                                color: variables.$alexa-blue;
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+                        .set-default {
+                            font-weight: bold;
+                            font-size: 14px;
+                        }
+                        .location-option {
+                            width: 100%;
+                            background: #efefef;
+                            padding: 10px 8px;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            .is-default {
+                                font-weight: bold;
+                                font-size: 13px;
+                                margin-bottom: 5px;
+                            }
+                            .field {
+                                font-size: 14px;
+                            }
+                            &:hover {
+                                background: variables.$light-orange; 
+                            }
+                        }
+                    }
+                }
+            }  
+            .search-bar {
+                flex-grow: 1;
+                border-radius: 5px;
+                overflow: hidden;
+                display: flex;
+                justify-content: flex-start;
+                position: relative;
+                align-items: center;
+                .search-input {
+                    width: 90%;
+                    border: none;
+                    padding: 8px 10px;
+                    font-size: 16px;
+                    flex-grow: 1;
+                    &:focus {
+                        outline: none;
+                    }
+                    &::placeholder {
+                        color: rgb(125, 125, 125);
+                    }
+                }
+                .search-button {
+                    width: 10%;
+                    max-width: 50px;
+                    background: variables.$light-orange;
+                    align-self: stretch;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    border-top-right-radius: 5px;
+                    border-bottom-right-radius: 5px;
+                    &:hover {
+                        background: variables.$orange;
+                    }
+                    img {
+                        width: 30px;
+                    }
+                }
+            }
+        }
+        .right-hand-side {
+            width: 24%;
+            max-width: 320px;
+            min-width: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+            .account {
+                width: 32%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                cursor: pointer;
+                .welcome {
+                    font-size: 13px;
+                    font-family: "Amazon Ember Light";
+                }
+                .dropdown {
+                    display: flex;
+                    position: relative;
+                    justify-content: flex-start;
+                    gap: 3px;
+                    align-items: center;
+                    .text {
+                        font-weight: bold;
+                    }
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                    .menu {
+                        background: white;
+                        position: fixed;
+                        top: 62px;
+                        width: 100%;
+                        max-width: 300px;
+                        margin-left: -100px;
+                        display: none;
+                        flex-direction: column;
+                        align-items: center;
+                        color: black;
+                        border-bottom-left-radius: 4px;
+                        border-bottom-right-radius: 4px;
+                        padding: 15px;
+                        cursor: default;
+                        &.authenticated {
+                            max-width: 450px;
+                            margin-left: -300px;
+                            padding: 0;
+                            .menu-wrapper {
+                                width: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                padding: 10px 0;
+                                .dashboard {
+                                    width: 92%;
+                                    background:rgb(224, 244, 245);
+                                    border-radius: 4px;
+                                    padding: 15px;
+                                    color: rgb(50, 50, 50);
+                                    font-size: 14px;
+                                    cursor: pointer;
+                                    .arrow {
+                                        transform: scaleX(0.9);
+                                        display: none;
+                                    }
+                                    &:hover {
+                                        background:rgb(214, 241, 243);
+                                        .arrow {
+                                            display: inline-block;
+                                        }
+                                    }
+                                }
+                                .categories {
+                                    width: 92%;
+                                    padding: 25px 0 30px;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: flex-start;
+                                    .left {
+                                        border-right: 1px solid rgb(194, 194, 194);
+                                        padding-right: 18px;
+                                    }
+                                    .right {
+                                        padding-left: 18px;
+                                    }
+                                    .left, .right {
+                                        width: 50%;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: flex-start;
+                                        gap: 20px;
+                                        .category {
+                                            width: 100%;
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: flex-start;
+                                            gap: 10px;
+                                            .category-info {
+                                                width: 100%;
+                                                display: flex;
+                                                justify-content: space-between;
+                                                align-items: center;
+                                                &:last-child {
+                                                    .name {
+                                                        cursor: pointer;
+                                                        &:hover {
+                                                            color: variables.$orange;
+                                                        }
+                                                    }
+                                                }
+                                                .name {
+                                                    font-size: 16px;
+                                                    color: rgb(41, 41, 41);
+                                                    font-family: "Amazon Ember Bold";
+                                                }
+                                                .see-all {
+                                                    font-size: 13px;
+                                                    color: variables.$alexa-blue;
+                                                    cursor: pointer;
+                                                    &:hover {
+                                                        text-decoration: underline;
+                                                    }
+                                                }
+                                            }
+                                            .sub-items {
+                                                width: 100%;
+                                                display: flex;
+                                                flex-direction: column;
+                                                gap: 10px;
+                                                .item {
+                                                    width: 100%;
+                                                    font-size: 13px;
+                                                    cursor: pointer;
+                                                    color: black;
+                                                    &:hover {
+                                                        text-decoration: underline;
+                                                        color: variables.$orange;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        &.active {
+                            display: flex;
+                            .items {
+                                width: 100%;
+                                display: flex;
+                                flex-direction: column;
+                                .item {
+                                    width: 100%;
+                                    padding: 10px;
+                                    font-size: 14px;
+                                    cursor: pointer;
+                                    &:hover {
+                                        background: rgb(243, 243, 243);
+                                        border-radius: 4px;
+                                    }
+                                }
+                            }
+                        }
+                        .auth-prompt {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                            .sign-in {
+                                width: 100%;
+                                text-align: center;
+                                padding: 10px 0;
+                                background: variables.$yellow;
+                                border-radius: 4px;
+                                font-size: 14px;
+                                color: black;
+                                &:hover {
+                                    background: variables.$dark-yellow;
+                                }
+                            }
+                            .register {
+                                width: 100%;
+                                text-align: center;
+                                font-size: 12px;
+                                a {
+                                    color: variables.$alexa-blue;
+                                    &:hover {
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .notifications {
+                width: 40%;
+                display: flex;
+                cursor: pointer;
+                justify-content: flex-start;
+                gap: 5px;
+                align-items: center;
+                img {
+                    width: 16px;
+                    height: 20px;
+                }
+                .label {
+                    font-weight: bold;
+                    font-size: 15px;
+                }
+            }
+            .cart {
+                width: 20%;
+                display: flex;
+                cursor: pointer;
+                justify-content: flex-start;
+                align-items: flex-end;
+                img {
+                    width: 25px;
+                    height: 25px;
+                }
+                .label {
+                    font-weight: bold;
+                    font-size: 15px;
+                    margin-bottom: 3px;
+                }
+            }
+        }
+        .right-hand-side-mobile {
+            display: none;
+        }
+        .location-mobile {
+            display: none;
+        }
+    }
+    .setup-notification {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        gap: 30px;
+        align-items: center;
+        background: #232c40;
+        padding: 8px 20px;
+        .text {
+            color: white;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        img {
+            width: 15px;
+            height: 12px;
+            margin-top: 2px;
+        }
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    .nav {
+        .main-wrapper {
+            gap: 10px;
+            .left-hand-side {
+                gap: 10px;
+                .intro {
+                    width: 200px;
+                }
+                .location {
+                    .label {
+                        font-size: 12px;
+                    }
+                    .specific-region {
+                        font-size: 14px;
+                    }
+                }
+            }
+            .right-hand-side {
+                .account {
+                    width: 30%;
+                    .welcome {
+                        font-size: 12px;
+                    }
+                    .dropdown {
+                        .text {
+                            font-size: 14px;
+                        }
+                    }
+                    
+                }
+                .notifications {
+                    width: 45%;
+                    .label {
+                        font-size: 14px;
+                    }
+                }
+                .cart {
+                    width: 20%;
+                    .label {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .nav {
+        .main-wrapper {
+            gap: 20px;
+            .left-hand-side {
+                gap: 20px;
+            }
+            .right-hand-side {
+                justify-content: flex-start;
+                gap: 20px;
+                .account {
+                    width: 50%;
+                }
+                .notifications {
+                    width: 10%;
+                    justify-content: center;
+                    margin-left: auto;
+                    .label {
+                        display: none;
+                    }
+                }
+                .cart {
+                    width: 10%;
+                    .label {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .nav {
+        .main-wrapper {
+            flex-direction: column;
+            padding: 0;
+            gap: 10px;
+            .menu-mobile {
+                &.active {
+                    display: block;
+                }
+            }
+            .left-hand-side {
+                width: 100%;
+                flex-grow: 0;
+                flex-wrap: wrap;
+                gap: 0;
+                row-gap: 10px;
+                justify-content: space-between;
+                padding: 14px 20px 0;
+                .intro {
+                    width: 50%;
+                    .logo {
+                        width: 100%;
+                        max-width: 90px;
+                    }
+                    .location {
+                        display: none;
+                    }
+                }
+                .right-hand-side-mobile {
+                    width: 50%;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    gap: 20px;
+                    .item {
+                        width: 30%;
+                        max-width: 35px;
+                        cursor: pointer;
+                        display: flex;
+                        justify-content: center;
+                        img {
+                            width: 100%;
+                        }
+                        &.notifications {
+                            img {
+                                max-width: 25px;
+                            }
+                        }
+                        &.cart {
+                            img {
+                                max-width: 30px;
+                            }
+                        }
+                    }
+                }
+                .search-bar {
+                    flex-grow: 0;
+                    width: 100%;
+                    justify-content: space-between;
+                }
+            }
+            .right-hand-side {
+                display: none;
+            }
+            .location-mobile {
+                width: 100%;
+                display: flex;
+                justify-content: flex-start;
+                gap: 10px;
+                align-items: center;
+                padding: 8px 20px;
+                img {
+                    width: 10%;
+                    max-width: 20px;
+                }
+                .deliver {
+                    width: 90%;
+                    flex-grow: 1;
+                    .region {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+        .setup-notification {
+
+        }
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .nav {
+        .main-wrapper {
+            .menu-mobile {
+                .welcome {
+                    padding-left: 22px;
+                    padding-right: 22px;
+                    .welcome-text {
+                        font-size: 24px;
+                    }
+                }
+                .categories {
+                    .category {
+                        padding-left: 22px;
+                        padding-right: 22px;
+                        .category-info {
+                            .name {
+                                font-size: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

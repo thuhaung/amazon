@@ -1,0 +1,112 @@
+.homepage {
+    position: relative;
+    width: 100%;
+    background: #e8e4e4;
+    padding-bottom: 100px;
+    flex: 1;
+    .main-content {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        .topic-carousel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: scroll;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-snap-type: x mandatory;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            .topics {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                transition: all 0.5s;
+                .topic {
+                    min-width: 100%;
+                    height: 400px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    background: pink;
+                    overflow-y: hidden;
+                    &.sage {
+                        background: #b6eab6;
+                    }
+                    &.purple {
+                        background: #3444ef;
+                        .title {
+                            color: white;
+                        }
+                    }
+                    &.beige {
+                        background: #ede6b8;
+                    }
+                    &.pink {
+                        background: #fbc8c2;
+                    }
+                    &:nth-child(even) {
+                        flex-direction: row-reverse;
+                    }
+                    .title {
+                        width: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-weight: bold;
+                        font-size: 36px;
+                    }
+                    img {
+                        width: 50%;
+                        height: 100%;
+                    }
+                }
+            }
+            .button {
+                position: absolute;
+                font-size: 42px;
+                cursor: pointer;
+                transform: scaleY(2);
+                z-index: 1;
+                color: rgb(59, 59, 59);
+                font-family: "Amazon Ember Light";
+                &:hover {
+                    -webkit-text-stroke-width: 0.8px;
+                    -webkit-text-stroke-color: white;
+                }
+                &.prev {
+                    left: 20px;
+                }
+                &.next {
+                    right: 20px;
+                }
+            }
+        }
+        .mobile-hero {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .homepage {
+        .main-content {
+            .topic-carousel {
+               display: none;
+            }
+            .mobile-hero {
+                display: block;
+                width: 100%;
+                img {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
