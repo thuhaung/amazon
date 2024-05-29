@@ -3,9 +3,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  	<h2 align="center">
-  		Amazon E-commerce Application Clone
-	  </h2>
+	<a href="https://amazon.com/">
+		<img 
+			src="https://images.crowdspring.com/blog/wp-content/uploads/2023/07/03162944/amazon-logo-1.png" 
+			alt="Amazon logo" 
+			width="100" 
+			height="100">
+	</a>
+	<h2 align="center">
+		Amazon E-commerce Application Clon
+  	</h2>
 </div>
 
 <!-- ABOUT THE PROJECT -->
