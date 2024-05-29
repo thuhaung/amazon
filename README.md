@@ -5,8 +5,10 @@
 <div align="center">
 	<a href="https://amazon.com/">
 		<img 
-			src="https://images.crowdspring.com/blog/wp-content/uploads/2023/07/03162944/amazon-logo-1.png" 
-			alt="Amazon logo" >
+			src="https://www.fineprintart.com/images/blog/amazon-logo/amazon_logo_history_5.jpg" 
+			alt="Amazon logo"
+			width="100"
+			height="100">
 	</a>
 	<h2 align="center">
 		Amazon E-commerce Application Clon
