@@ -6,9 +6,7 @@
 	<a href="https://amazon.com/">
 		<img 
 			src="https://images.crowdspring.com/blog/wp-content/uploads/2023/07/03162944/amazon-logo-1.png" 
-			alt="Amazon logo" 
-			width="100" 
-			height="100">
+			alt="Amazon logo" >
 	</a>
 	<h2 align="center">
 		Amazon E-commerce Application Clon
