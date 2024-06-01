@@ -10,6 +10,7 @@ import java.util.List;
 @Entity(name="role")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

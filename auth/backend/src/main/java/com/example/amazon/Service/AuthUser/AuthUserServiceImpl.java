@@ -134,7 +134,7 @@ public class AuthUserServiceImpl implements AuthUserService {
 
         if (passwordEncoder.matches(oldPassword, password)) {
             // verifies if new password matches old password
-            if (passwordEncoder.matches(newPassword, password)) {
+            if (newPassword.equals(oldPassword)) {
                 throw new SamePasswordException("New password cannot be the same as current password.");
             }
             else {
