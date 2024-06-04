@@ -24,13 +24,20 @@ public class Producer {
     private final NewTopic userAuthTopic;
 
     public void sendEmailVerificationToken(EmailPayload payload) {
-        try {
-            kafkaTemplate.send(emailVerificationTopic.name(), payload).get(6, TimeUnit.SECONDS);
-            log.info("Sent token to email verification topic for recipient " + payload.getRecipient() + ".");
-        } catch(Exception e) {
-            log.error("Unable to send message to email verification topic due to " + e.getMessage());
-            throw new KafkaException("Unable to send email. Please try again later.");
-        }
+        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(
+            emailVerificationTopic.name(),
+            payload
+        );
+
+        future.whenComplete((result, error) -> {
+            if (error == null) {
+                log.info("Sent token to email verification topic for recipient " + payload.getRecipient() + ".");
+            }
+            else {
+                log.error("Unable to send message to email verification topic due to " + error.getMessage());
+                throw new KafkaException("Unable to send email. Please try again later.");
+            }
+        });
     }
 
     public void sendUserCreatedEvent(UserEvent event) {

@@ -2,8 +2,8 @@ package com.example.amazon.Config.Security;
 
 import com.example.amazon.Config.Security.JWT.AuthEntryPoint;
 import com.example.amazon.Config.Security.JWT.AuthTokenFilter;
-import com.example.amazon.Config.Security.JWT.JwtUtil;
-import com.example.amazon.Service.AuthUser.AuthUserServiceImpl;
+import com.example.amazon.Service.AuthUserService;
+import com.example.amazon.Util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ import java.util.Arrays;
 @EnableDiscoveryClient
 @EnableScheduling
 public class SecurityConfig {
-    private final AuthUserServiceImpl authUserService;
+    private final AuthUserService authUserService;
     private final JwtUtil jwtUtil;
     private final AuthEntryPoint unauthorizedHandler;
 

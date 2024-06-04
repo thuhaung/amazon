@@ -1,7 +1,8 @@
 package com.example.amazon.Config.Security.JWT;
 
 import com.example.amazon.Model.AuthUser;
-import com.example.amazon.Service.AuthUser.AuthUserServiceImpl;
+import com.example.amazon.Service.AuthUserService;
+import com.example.amazon.Util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -26,7 +27,7 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final AuthUserServiceImpl authUserService;
+    private final AuthUserService authUserService;
 
     @Override
     protected void doFilterInternal(

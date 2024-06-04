@@ -159,8 +159,4 @@ public class GlobalExceptionHandler {
 
         return fieldErrorMessages;
     }
-
-//    public String getStatusCode(HttpStatus httpStatus) {
-//        return httpStatus.value() + " " + httpStatus.getReasonPhrase();
-//    }
 }

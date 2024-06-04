@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LoginRequest {
+public class SignInRequest {
     @NotEmpty(message="Email cannot be empty.")
     private String email;
 

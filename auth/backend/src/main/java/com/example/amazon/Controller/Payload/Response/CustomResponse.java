@@ -31,10 +31,4 @@ public class CustomResponse {
         this.status = status.value() + " " + status.getReasonPhrase();
         this.responseObject = responseObject;
     }
-
-    public CustomResponse(String message, HttpStatus status) {
-        this.message = message;
-        this.status = status.value() + " " + status.getReasonPhrase();
-        this.responseObject = null;
-    }
 }

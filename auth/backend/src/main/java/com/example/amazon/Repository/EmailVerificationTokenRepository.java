@@ -12,9 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface EmailVerificationTokenRepository extends JpaRepository<EmailVerificationToken, Long> {
-    @Query("SELECT x.token as token, x.expiration as expiration FROM EmailVerificationToken x WHERE x.user.id=?1")
-    Optional<EmailVerificationTokenProjection> findByUserId(Long id);
-    @Query("DELETE FROM EmailVerificationToken x WHERE x.token=?1")
+    Optional<EmailVerificationToken> findByUserId(Long id);
+    @Query
     @Modifying
-    void deleteByToken(String token);
+    void deleteByUserId(Long id);
 }

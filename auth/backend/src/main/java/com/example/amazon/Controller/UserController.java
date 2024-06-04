@@ -4,17 +4,12 @@ import com.example.amazon.Controller.Payload.Request.EmailVerificationRequest;
 import com.example.amazon.Controller.Payload.Response.CustomResponse;
 import com.example.amazon.DTO.AuthUser.UpdateEmailRequest;
 import com.example.amazon.DTO.AuthUser.UpdatePasswordRequest;
-import com.example.amazon.Exception.Data.EmailExistsException;
-import com.example.amazon.Exception.Kafka.KafkaException;
-import com.example.amazon.Kafka.Payload.EmailPayload;
-import com.example.amazon.Kafka.Producer;
-import com.example.amazon.Model.*;
-import com.example.amazon.Config.Security.JWT.JwtUtil;
-import com.example.amazon.Service.AuthUser.AuthUserServiceImpl;
-import com.example.amazon.Service.EmailVerificationToken.EmailVerificationTokenServiceImpl;
-import com.example.amazon.Service.RefreshToken.RefreshTokenServiceImpl;
+import com.example.amazon.Service.AuthUserService;
+import com.example.amazon.Service.DistributedTransactionService;
+import com.example.amazon.Service.EmailVerificationService;
+import com.example.amazon.Util.CookieUtil;
 import com.example.amazon.Util.ResponseHandler;
-import com.example.amazon.Util.SignOutHandler;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,18 +30,17 @@ import java.time.Instant;
 @Slf4j
 @PreAuthorize("@authUtil.hasPermission(#id)")
 public class UserController {
-
-    private final JwtUtil jwtUtil;
-    private final AuthUserServiceImpl authUserService;
-    private final RefreshTokenServiceImpl refreshTokenService;
-    private final EmailVerificationTokenServiceImpl emailVerificationTokenService;
-    private final Producer producer;
+    private final AuthUserService authUserService;
+    private final EmailVerificationService emailVerificationService;
+    private final DistributedTransactionService distributedTransactionService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomResponse> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomResponse> getUser(
+        @PathVariable("id") Long id
+    ) {
         return ResponseHandler.generateResponse(
             HttpStatus.OK,
-            authUserService.getAuthUserById(id)
+            authUserService.getUserById(id)
         );
     }
 
@@ -54,16 +48,10 @@ public class UserController {
     public ResponseEntity<CustomResponse> deleteAccount(
         @PathVariable("id") Long id
     ) {
-        authUserService.deleteAuthUser(id);
-        HttpHeaders headers = SignOutHandler.signUserOut();
-
-        // remove refresh token from db
-        refreshTokenService.deleteByUserId(id);
+        authUserService.deleteUser(id);
 
         return ResponseHandler.generateResponse(
-            HttpStatus.OK,
-            "Account will be removed in 30 days. Please sign in again to cancel.",
-            headers
+            HttpStatus.OK
         );
     }
 
@@ -71,14 +59,16 @@ public class UserController {
     public ResponseEntity<CustomResponse> deactivateAccount(
         @PathVariable("id") Long id
     ) {
-        authUserService.deactivateAuthUser(id);
-        HttpHeaders headers = SignOutHandler.signUserOut();
+        List<ResponseCookie> cookies = authUserService.setUserActiveStatus(id, false);
 
-        // remove refresh token from db
-        refreshTokenService.deleteByUserId(id);
+        HttpHeaders headers = new HttpHeaders();
+
+        if (!cookies.isEmpty()) {
+            headers = CookieUtil.setCookieHeader(cookies);
+        }
 
         return ResponseHandler.generateResponse(
-            HttpStatus.OK,
+            HttpStatus.ACCEPTED,
             "Account deactivated. Please sign in again to reactivate.",
             headers
         );
@@ -89,11 +79,10 @@ public class UserController {
         @PathVariable("id") Long id,
         @Valid @RequestBody UpdatePasswordRequest request
     ) {
-        authUserService.updatePassword(request, id);
+        authUserService.updatePassword(id, request);
 
         return ResponseHandler.generateResponse(
-            HttpStatus.OK,
-            "Password updated successfully."
+            HttpStatus.OK
         );
     }
 
@@ -102,44 +91,19 @@ public class UserController {
         @PathVariable("id") Long id,
         @Valid @RequestBody UpdateEmailRequest request
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AuthUser user = (AuthUser) authentication.getPrincipal();
+        Map<String, String> newToken = authUserService.updateEmail(id, request);
 
-        String newEmail = request.getEmail();
-        String oldEmail = user.getEmail();
+        // update access token cookie with new value
+        ResponseCookie newAccessTokenCookie = CookieUtil.createTokenCookie(
+            "accessToken",
+            newToken.get("value"),
+            Duration.parse(newToken.get("expiration"))
+        );
 
-        HttpHeaders headers = new HttpHeaders();
-
-        // update access token if email changed
-        if (!newEmail.equals(oldEmail)) {
-            // persist
-            authUserService.updateEmail(request, id);
-
-            String accessToken = jwtUtil.generateJwtToken(newEmail, id);
-            log.info("New access token generated, token = " + accessToken);
-
-            // find refresh token
-            Instant refreshTokenExpiration = refreshTokenService.getTokenExpirationByUserId(id);
-            //RefreshToken refreshToken = refreshTokenService.getTokenByUserId(id);
-            log.info("Refresh token exists");
-
-            ResponseCookie accessTokenCookie = ResponseCookie
-                    .from("accessToken", accessToken)
-                    .httpOnly(true)
-                    .secure(false)
-                    .path("/")
-                    .maxAge(Math.abs(Instant.now().getEpochSecond() - refreshTokenExpiration.getEpochSecond()))
-                    .build();
-
-            headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-        }
-        else {
-            throw new EmailExistsException("New email cannot be the same as old email.");
-        }
+        HttpHeaders headers = CookieUtil.setCookieHeader(List.of(newAccessTokenCookie));
 
         return ResponseHandler.generateResponse(
             HttpStatus.OK,
-            "Email updated.",
             headers
         );
     }
@@ -148,17 +112,7 @@ public class UserController {
     public ResponseEntity<CustomResponse> sendVerificationEmail(
         @PathVariable("id") Long id
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AuthUser user = (AuthUser) authentication.getPrincipal();
-
-        EmailVerificationToken token = emailVerificationTokenService.generateToken(user);
-        EmailPayload payload = EmailPayload.builder()
-                .recipient(user.getEmail())
-                .subject("Amazon | Verify your email")
-                .text("Your email verification code is " + token.getToken())
-                .build();
-
-        producer.sendEmailVerificationToken(payload);
+        distributedTransactionService.distributeEmailVerificationEvent(id);
 
         return ResponseHandler.generateResponse(
             HttpStatus.ACCEPTED,
@@ -171,11 +125,10 @@ public class UserController {
         @PathVariable("id") Long id,
         @Valid @RequestBody EmailVerificationRequest request
     ) {
-        emailVerificationTokenService.verifyEmail(request.getToken(), id);
+        emailVerificationService.verifyEmail(id, request);
 
         return ResponseHandler.generateResponse(
-            HttpStatus.OK,
-        "Email has been successfully verified."
+            HttpStatus.OK
         );
     }
 }

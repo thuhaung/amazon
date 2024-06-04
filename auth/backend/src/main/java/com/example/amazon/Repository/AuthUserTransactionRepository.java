@@ -7,17 +7,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface AuthUserTransactionRepository extends JpaRepository<AuthUserTransaction, Long> {
-    @Query("UPDATE AuthUserTransaction x SET x.status=?2 WHERE x.user.id=?1")
+    @Query("UPDATE AuthUserTransaction x SET x.status=?2 WHERE x.id=?1")
     @Modifying
-    void updateTransactionStatus(Long userId, TransactionStatusEnum status);
+    void updateTransactionStatus(Long id, TransactionStatusEnum status);
     @Query("DELETE FROM AuthUserTransaction x WHERE x.status='DONE'")
     @Modifying
     int removeFinishedTransactions();
-    @Query("DELETE FROM AuthUserTransaction x WHERE x.user.id=?1")
-    @Modifying
-    int deleteTransactionsByUserId(Long userId);
 }

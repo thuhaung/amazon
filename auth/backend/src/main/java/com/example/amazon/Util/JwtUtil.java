@@ -1,4 +1,4 @@
-package com.example.amazon.Config.Security.JWT;
+package com.example.amazon.Util;
 
 import com.example.amazon.Model.AuthUser;
 import io.jsonwebtoken.*;
