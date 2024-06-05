@@ -99,12 +99,12 @@ public class AuthenticationService {
         ResponseCookie accessTokenCookie = CookieUtil.createTokenCookie(
             "accessToken",
             "",
-            Duration.ofMillis(0)
+            Duration.ZERO
         );
         ResponseCookie refreshTokenCookie = CookieUtil.createTokenCookie(
             "refreshToken",
             "",
-                Duration.ofMillis(0)
+            Duration.ZERO
         );
 
         return List.of(accessTokenCookie, refreshTokenCookie);
