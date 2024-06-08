@@ -251,11 +251,6 @@ public class AuthUserServiceTest {
                 .build();
         }
 
-        @AfterEach
-        public void cleanUp() {
-            this.request = null;
-        }
-
         @Test
         public void givenNewEmailSimilarToOldEmail_whenUpdateEmail_thenThrowException() {
             // given

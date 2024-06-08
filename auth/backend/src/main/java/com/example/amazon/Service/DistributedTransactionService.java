@@ -26,7 +26,7 @@ public class DistributedTransactionService {
     @Value("${uri.user-service}")
     private String uri;
     private final Producer producer;
-    private final RestTemplate restTemplate;
+    private final PollingService pollingService;
     private final AuthUserService authUserService;
     private final AuthUserRepository authUserRepository;
     private final EmailVerificationService emailVerificationService;
@@ -51,37 +51,10 @@ public class DistributedTransactionService {
             );
 
             HttpStatusCode statusCode = null;
-            int count = 0;
 
             // poll for consumer confirmation of successful sync via REST API endpoint
             // keep polling if status code returns error and number of retries are fewer than 10
-            while ((statusCode == null || statusCode.isError()) && count < 10) {
-
-                // delays each request to allow for consumer to process
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    authUserTransactionService.updateTransactionStatus(
-                            transactionId,
-                            TransactionStatusEnum.FAILED
-                    );
-
-                    log.error("Consumer failed to create user.");
-                    throw new UserCreationException();
-                }
-
-                try {
-                    ResponseEntity<String> result = restTemplate.getForEntity(
-                            uri + "/poll/user/" + userId,
-                            String.class
-                    );
-                    statusCode = result.getStatusCode();
-                } catch (HttpClientErrorException e) {
-                    statusCode = e.getStatusCode();
-                }
-
-                count++;
-            }
+            statusCode = pollingService.pollForUserEvent(userId, transactionId);
 
             // consumer fails to sync record creation, performs manual roll back on producer side
             if (statusCode.isError()) {

@@ -8,6 +8,7 @@ import com.example.amazon.Exception.Data.ResourceNotFoundException;
 import com.example.amazon.Model.AuthUser;
 import com.example.amazon.Model.EmailVerificationToken;
 import com.example.amazon.Repository.EmailVerificationTokenRepository;
+import com.example.amazon.Util.TokenGenerationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,6 @@ import java.util.Random;
 public class EmailVerificationService {
     private final AuthUserService authUserService;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
-
-    private String getSaltString() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random random = new Random();
-
-        while (salt.length() < 6) {
-            int index = (int) (random.nextFloat() * chars.length());
-            salt.append(chars.charAt(index));
-        }
-
-        return salt.toString();
-    }
 
     private boolean isExpired(EmailVerificationToken token) {
         return token.getExpiration().isBefore(Instant.now());
@@ -65,7 +53,7 @@ public class EmailVerificationService {
 
         EmailVerificationToken token = EmailVerificationToken.builder()
                 .user(user)
-                .token(getSaltString())
+                .token(TokenGenerationUtil.generateTokenForEmail())
                 .expiration(Instant.now().plusMillis(120000))
                 .build();
 
@@ -81,10 +69,15 @@ public class EmailVerificationService {
         String token = request.getToken();
 
         EmailVerificationToken existingToken = emailVerificationTokenRepository.findByUserId(userId).orElseThrow(
-            () -> new ResourceNotFoundException("No email verification tokens exist for user.")
+            () -> new ResourceNotFoundException("No email verification tokens exist for user. Please request to send a new email verification token.")
         );
 
         if (existingToken.getToken().equals(token)) {
+            if (isExpired(existingToken)) {
+                emailVerificationTokenRepository.deleteByUserId(userId);
+                throw new VerificationTokenException("Token is expired, please request to send a new email verification token.");
+            }
+
             authUserService.setUserVerificationStatus(userId, true);
             emailVerificationTokenRepository.deleteByUserId(userId);
         }
